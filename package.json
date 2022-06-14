@@ -1,8 +1,11 @@
 {
   "scripts": {
-    "start": "ts-node src/Bot.ts"
+    "register-commands": "ts-node src/deploy-commands.ts",
+    "start": "ts-node src/bot.ts"
   },
   "dependencies": {
+    "@discordjs/rest": "^0.5.0",
+    "discord-api-types": "^0.34.0",
     "discord.js": "^13.8.0",
     "dotenv": "^16.0.1"
   },
