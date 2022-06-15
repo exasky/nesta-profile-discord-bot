@@ -1,5 +1,8 @@
 import { Client, Intents } from 'discord.js';
-import { processProfileCommand } from './commands/profile/profile';
+import {
+  processProfileCommand,
+  PROFILE_COMMAND_NAME,
+} from './commands/profile/profile';
 import {
   SET_DESCRIPTION_MODAL_ID,
   updateDescription,
@@ -16,7 +19,7 @@ client.on('ready', () => {
 
 client.on('interactionCreate', async (interaction) => {
   if (interaction.isCommand()) {
-    if (interaction.commandName === 'profile') {
+    if (interaction.commandName === PROFILE_COMMAND_NAME) {
       await processProfileCommand(interaction);
     }
   }

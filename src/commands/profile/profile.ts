@@ -13,7 +13,7 @@ export async function processProfileCommand(interaction: CommandInteraction) {
       await processSetProfile(interaction, interactionSubcommands[0].options);
       break;
     case SHOW_COMMAND_NAME:
-      showUserProfile(interaction);
+      showUserProfile(interaction, interactionSubcommands[0].options);
       break;
   }
 }

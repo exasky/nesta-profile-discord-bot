@@ -1,10 +1,7 @@
+import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
-import {
-  SlashCommandBuilder,
-  SlashCommandSubcommandGroupBuilder,
-  SlashCommandSubcommandBuilder,
-} from '@discordjs/builders';
+import { PROFILE_COMMAND_NAME } from './commands/profile/profile';
 import {
   SET_COMMAND_NAME,
   SET_SUB_COMMAND_OPTIONS,
@@ -13,7 +10,6 @@ import {
   SHOW_COMMAND_NAME,
   SHOW_SUB_COMMAND_OPTIONS,
 } from './commands/profile/show';
-import { PROFILE_COMMAND_NAME } from './commands/profile/profile';
 require('dotenv').config();
 
 if (!process.env.TOKEN) {

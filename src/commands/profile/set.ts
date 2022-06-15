@@ -53,13 +53,13 @@ export function openDialogSetDescription(
   interaction: BaseCommandInteraction
 ): Promise<void> {
   const modal = new Modal()
-    .setCustomId('updateProfilDescription')
+    .setCustomId(SET_DESCRIPTION_MODAL_ID)
     .setTitle('Update description');
 
   const descriptionActionRow =
     new MessageActionRow<ModalActionRowComponent>().addComponents([
       new TextInputComponent()
-        .setCustomId(SET_DESCRIPTION_MODAL_ID)
+        .setCustomId('descriptionInput')
         .setLabel('Description')
         .setStyle('PARAGRAPH'),
     ]);
@@ -69,5 +69,6 @@ export function openDialogSetDescription(
 }
 
 export function updateDescription(interaction: ModalSubmitInteraction) {
-  // TOTO update user description the show user profile (or just say 'ok description updated')
+  // TOTO update user description (or just say 'ok description updated')
+  interaction.reply('Profile updated !');
 }
