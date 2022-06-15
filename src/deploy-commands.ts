@@ -5,6 +5,15 @@ import {
   SlashCommandSubcommandGroupBuilder,
   SlashCommandSubcommandBuilder,
 } from '@discordjs/builders';
+import {
+  SET_COMMAND_NAME,
+  SET_SUB_COMMAND_OPTIONS,
+} from './commands/profile/set';
+import {
+  SHOW_COMMAND_NAME,
+  SHOW_SUB_COMMAND_OPTIONS,
+} from './commands/profile/show';
+import { PROFILE_COMMAND_NAME } from './commands/profile/profile';
 require('dotenv').config();
 
 if (!process.env.TOKEN) {
@@ -19,37 +28,45 @@ if (!process.env.GUILD_ID) {
 
 const commands: any[] = [
   new SlashCommandBuilder()
-    .setName('profile')
+    .setName(PROFILE_COMMAND_NAME)
     .addSubcommand((subCommand) =>
       subCommand
-        .setName('show')
+        .setName(SHOW_COMMAND_NAME)
         .setDescription('Show profile of yourself or another user')
         .addUserOption((option) =>
-          option.setName('user').setDescription('Profile of specific user')
+          option
+            .setName(SHOW_SUB_COMMAND_OPTIONS.USER)
+            .setDescription('Profile of specific user')
         )
     )
     .addSubcommand((subCommand) =>
       subCommand
-        .setName('set')
+        .setName(SET_COMMAND_NAME)
         .setDescription('Update your profile')
         .addStringOption((option) =>
-          option.setName('name').setDescription('Update your name')
+          option
+            .setName(SET_SUB_COMMAND_OPTIONS.NAME)
+            .setDescription('Update your name')
         )
         .addIntegerOption((option) =>
-          option.setName('age').setDescription('Update your age')
+          option
+            .setName(SET_SUB_COMMAND_OPTIONS.AGE)
+            .setDescription('Update your age')
         )
         .addStringOption((option) =>
-          option.setName('mail').setDescription('Update your email')
+          option
+            .setName(SET_SUB_COMMAND_OPTIONS.MAIL)
+            .setDescription('Update your email')
         )
         .addStringOption((option) =>
-          option.setName('linkedin').setDescription('Update your linkedIn link')
+          option
+            .setName(SET_SUB_COMMAND_OPTIONS.LINKED_IN)
+            .setDescription('Update your linkedIn link')
         )
         .addBooleanOption((option) =>
           option
-            .setName('modal')
-            .setDescription(
-              'Open modal to update your profile (bypass all others options)'
-            )
+            .setName(SET_SUB_COMMAND_OPTIONS.DESCRIPTION)
+            .setDescription('Open modal to update your profile description')
         )
     )
     .setDescription('Interact with profiles !'),
