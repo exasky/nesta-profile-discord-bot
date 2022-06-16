@@ -3,6 +3,7 @@ import {
   CommandInteractionOption,
   MessageEmbed,
 } from 'discord.js';
+import { Logger } from '../../log';
 import { Database } from '../../database/database';
 
 export const SHOW_COMMAND_NAME = 'show';
@@ -11,36 +12,45 @@ export enum SHOW_SUB_COMMAND_OPTIONS {
   USER = 'user',
 }
 
-export async function showUserProfile(
+const logger = Logger.for('SHOW PROFILE');
+
+export function showUserProfile(
   interaction: CommandInteraction,
   options?: CommandInteractionOption<any>[]
 ) {
-  const mentionnedUsed =
+  const mentionnedUser =
     options &&
     options.length === 1 &&
     options[0].name === SHOW_SUB_COMMAND_OPTIONS.USER
       ? options[0].user
       : interaction.user;
-  if (!mentionnedUsed) {
+  if (!mentionnedUser) {
     interaction.reply('User not found !');
     return;
   }
 
-  const user = await Database.intance.getUserById(mentionnedUsed.id);
+  logger.log(`User ${mentionnedUser.username}`);
+  logger.debug(
+    `show profile for ${JSON.stringify(mentionnedUser)} by ${JSON.stringify(
+      interaction.user
+    )}`
+  );
+
+  const user = Database.intance.getUserById(mentionnedUser.id);
 
   if (!user) {
     interaction.reply('Profile not found !');
     return;
   }
 
-  const userAvatar = mentionnedUsed.avatarURL({});
+  const userAvatar = mentionnedUser.avatarURL({});
 
-  const exampleEmbed = new MessageEmbed()
+  const messageEmbed = new MessageEmbed()
     .setColor('#0099ff')
     .setTitle(`${user.name} profile`);
 
   if (userAvatar) {
-    exampleEmbed.setThumbnail(userAvatar);
+    messageEmbed.setThumbnail(userAvatar);
   }
 
   let buildDescription = '';
@@ -58,12 +68,12 @@ export async function showUserProfile(
     buildDescription += `\n:speech_left: **Description :** ${user.description}\n`;
   }
 
-  exampleEmbed.setDescription(buildDescription);
+  messageEmbed.setDescription(buildDescription);
 
-  exampleEmbed.setTimestamp().setFooter({
+  messageEmbed.setTimestamp().setFooter({
     text: 'Provided by Exasky',
     iconURL: 'https://avatars.githubusercontent.com/u/3509642?v=4',
   });
 
-  interaction.reply({ embeds: [exampleEmbed] });
+  interaction.reply({ embeds: [messageEmbed] });
 }

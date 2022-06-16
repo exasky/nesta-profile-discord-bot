@@ -8,6 +8,7 @@ import {
   ModalSubmitInteraction,
   TextInputComponent,
 } from 'discord.js';
+import { Logger } from '../../log';
 import { Database } from '../../database/database';
 
 export const SET_COMMAND_NAME = 'set';
@@ -21,10 +22,23 @@ export enum SET_SUB_COMMAND_OPTIONS {
   DESCRIPTION = 'description',
 }
 
+const logger = Logger.for('SET PROFILE');
+
 export async function processSetProfile(
   interaction: CommandInteraction,
   options?: CommandInteractionOption<any>[]
 ): Promise<void> {
+  logger.log(
+    `User ${interaction.user.username} with options : ${options?.map(
+      (opt) => opt.name
+    )}`
+  );
+  logger.debug(
+    `User ${JSON.stringify(interaction.user)} - Options ${JSON.stringify(
+      options
+    )}`
+  );
+
   if (!options || options.length === 0) {
     return interaction.reply('Nothing to do ! Perfect :)');
   }
@@ -97,9 +111,11 @@ export function openDialogSetDescription(
 }
 
 export function updateDescription(interaction: ModalSubmitInteraction) {
+  logger.log(`User ${interaction.user.username} description`);
+
   let descriptionField = interaction.fields.getField('descriptionInput');
   if (!descriptionField) {
-    console.error('No field "descriptionInput" found in modal submit');
+    logger.error('No field "descriptionInput" found in modal submit');
     return;
   }
 

@@ -14,6 +14,8 @@ Create a .env file with following properties
 
 This bot will store data in a local json file.
 
+Debug logs can be enabled by setting logLevel to "debug" in config.json file
+
 ## Build
 
 Just launch `yarn install` then `yarn run tsc` commands. After them, the dist folder will be prepared for run !
