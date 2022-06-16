@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { REST } from '@discordjs/rest';
 import { Routes } from 'discord-api-types/v9';
+import { DELETE_COMMAND_NAME } from './commands/profile/delete';
 import { PROFILE_COMMAND_NAME } from './commands/profile/profile';
 import {
   SET_COMMAND_NAME,
@@ -62,8 +63,15 @@ const commands: any[] = [
         .addBooleanOption((option) =>
           option
             .setName(SET_SUB_COMMAND_OPTIONS.DESCRIPTION)
-            .setDescription('Open modal to update your profile description')
+            .setDescription(
+              'If true, open modal to update your profile description'
+            )
         )
+    )
+    .addSubcommand((subCommand) =>
+      subCommand
+        .setName(DELETE_COMMAND_NAME)
+        .setDescription('Delete your profile')
     )
     .setDescription('Interact with profiles !'),
 ].map((command) => command.toJSON());

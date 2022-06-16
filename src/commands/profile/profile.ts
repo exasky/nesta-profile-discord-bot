@@ -1,4 +1,5 @@
 import { CommandInteraction } from 'discord.js';
+import { deleteUserProfile, DELETE_COMMAND_NAME } from './delete';
 import { processSetProfile, SET_COMMAND_NAME } from './set';
 import { showUserProfile, SHOW_COMMAND_NAME } from './show';
 
@@ -14,6 +15,9 @@ export async function processProfileCommand(interaction: CommandInteraction) {
       break;
     case SHOW_COMMAND_NAME:
       showUserProfile(interaction, interactionSubcommands[0].options);
+      break;
+    case DELETE_COMMAND_NAME:
+      deleteUserProfile(interaction);
       break;
   }
 }
