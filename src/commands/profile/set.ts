@@ -78,13 +78,19 @@ export function openDialogSetDescription(
     .setCustomId(SET_DESCRIPTION_MODAL_ID)
     .setTitle('Update description');
 
+  const user = Database.intance.getUserById(interaction.user.id);
+
+  const textInput = new TextInputComponent()
+    .setCustomId('descriptionInput')
+    .setLabel('Description')
+    .setStyle('PARAGRAPH');
+
+  if (user?.description) {
+    textInput.setValue(user.description);
+  }
+
   const descriptionActionRow =
-    new MessageActionRow<ModalActionRowComponent>().addComponents([
-      new TextInputComponent()
-        .setCustomId('descriptionInput')
-        .setLabel('Description')
-        .setStyle('PARAGRAPH'),
-    ]);
+    new MessageActionRow<ModalActionRowComponent>().addComponents([textInput]);
 
   modal.addComponents(descriptionActionRow);
   return interaction.showModal(modal);
