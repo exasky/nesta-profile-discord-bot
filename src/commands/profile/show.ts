@@ -3,6 +3,7 @@ import {
   CommandInteractionOption,
   MessageEmbed,
 } from 'discord.js';
+import { Database } from '../../database/database';
 
 export const SHOW_COMMAND_NAME = 'show';
 
@@ -10,7 +11,7 @@ export enum SHOW_SUB_COMMAND_OPTIONS {
   USER = 'user',
 }
 
-export function showUserProfile(
+export async function showUserProfile(
   interaction: CommandInteraction,
   options?: CommandInteractionOption<any>[]
 ) {
@@ -24,17 +25,13 @@ export function showUserProfile(
     interaction.reply('User not found !');
     return;
   }
-  // TODO get user profile from db
 
-  const user = {
-    name: 'MyUser',
-    age: 99,
-    mail: 'test@litestve.fr',
-    linkedIn: 'https://www.linkedin.com/in/nopenope',
-    description: `First line description
-    SecondLine
-    ThridLine`,
-  };
+  const user = await Database.intance.getUserById(mentionnedUsed.id);
+
+  if (!user) {
+    interaction.reply('Profile not found !');
+    return;
+  }
 
   const userAvatar = mentionnedUsed.avatarURL({});
 
