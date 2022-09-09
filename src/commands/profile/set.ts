@@ -1,12 +1,12 @@
 import {
-  BaseCommandInteraction,
+  ActionRowBuilder,
   CommandInteraction,
   CommandInteractionOption,
-  MessageActionRow,
-  Modal,
-  ModalActionRowComponent,
+  ModalBuilder,
   ModalSubmitInteraction,
-  TextInputComponent,
+  TextInputBuilder,
+  TextInputModalData,
+  TextInputStyle,
 } from 'discord.js';
 import { Logger } from '../../log';
 import { Database } from '../../database/database';
@@ -27,7 +27,7 @@ const logger = Logger.for('SET PROFILE');
 export async function processSetProfile(
   interaction: CommandInteraction,
   options?: CommandInteractionOption<any>[]
-): Promise<void> {
+): Promise<any> {
   logger.log(
     `User ${interaction.user.username} with options : ${options?.map(
       (opt) => opt.name
@@ -46,7 +46,7 @@ export async function processSetProfile(
   let hasUpdateOption = false;
   let hasDescriptionOption = false;
 
-  let user = Database.intance.getUserById(interaction.user.id);
+  let user = await Database.intance.getUserById(interaction.user.id);
   if (!user) {
     user = { id: interaction.user.id };
   }
@@ -78,54 +78,55 @@ export async function processSetProfile(
     }
   }
 
-  Database.intance.updateUser(user);
+  await Database.intance.updateUser(user);
 
   if (!hasDescriptionOption && hasUpdateOption) {
     return interaction.reply('Profile updated !');
   }
 }
 
-export function openDialogSetDescription(
-  interaction: BaseCommandInteraction
+export async function openDialogSetDescription(
+  interaction: CommandInteraction
 ): Promise<void> {
-  const modal = new Modal()
+  const modal = new ModalBuilder()
     .setCustomId(SET_DESCRIPTION_MODAL_ID)
     .setTitle('Update description');
 
-  const user = Database.intance.getUserById(interaction.user.id);
+  const user = await Database.intance.getUserById(interaction.user.id);
 
-  const textInput = new TextInputComponent()
-    .setCustomId('descriptionInput')
+  const textInput = new TextInputBuilder()
+    .setCustomId(SET_DESCRIPTION_MODAL_ID)
     .setLabel('Description')
-    .setStyle('PARAGRAPH');
+    .setStyle(TextInputStyle.Paragraph);
 
   if (user?.description) {
     textInput.setValue(user.description);
   }
-
   const descriptionActionRow =
-    new MessageActionRow<ModalActionRowComponent>().addComponents([textInput]);
+    new ActionRowBuilder<TextInputBuilder>().addComponents([textInput]);
 
   modal.addComponents(descriptionActionRow);
   return interaction.showModal(modal);
 }
 
-export function updateDescription(interaction: ModalSubmitInteraction) {
+export async function updateDescription(interaction: ModalSubmitInteraction) {
   logger.log(`User ${interaction.user.username} description`);
 
-  let descriptionField = interaction.fields.getField('descriptionInput');
+  const descriptionField = interaction.fields.getTextInputValue(
+    SET_DESCRIPTION_MODAL_ID
+  );
   if (!descriptionField) {
     logger.error('No field "descriptionInput" found in modal submit');
     return;
   }
 
-  let user = Database.intance.getUserById(interaction.user.id);
+  let user = await Database.intance.getUserById(interaction.user.id);
   if (!user) {
     user = { id: interaction.user.id };
   }
 
-  user.description = descriptionField.value;
+  user.description = descriptionField;
 
-  Database.intance.updateUser(user);
+  await Database.intance.updateUser(user);
   interaction.reply('Profile updated !');
 }

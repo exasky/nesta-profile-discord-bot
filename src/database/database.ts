@@ -32,10 +32,10 @@ export class Database {
     this.logger = Logger.for('DATABASE');
   }
 
-  getUserById(id: string): UserModel | null {
+  async getUserById(id: string): Promise<UserModel | null> {
     try {
       this.logger.debug(`get user ${id}`);
-      const foundUser = this.db.getData(
+      const foundUser = await this.db.getData(
         `${Database.DATABASE_PATH_SEPARATOR}${id}`
       );
       return foundUser;
@@ -45,19 +45,23 @@ export class Database {
     }
   }
 
-  updateUser(user: UserModel): UserModel {
+  async updateUser(user: UserModel): Promise<UserModel> {
     this.logger.debug(`update user ${user.id} with ${JSON.stringify(user)}`);
 
-    this.db.push(`${Database.DATABASE_PATH_SEPARATOR}${user.id}`, user, true);
-    this.db.save();
+    await this.db.push(
+      `${Database.DATABASE_PATH_SEPARATOR}${user.id}`,
+      user,
+      true
+    );
+    await this.db.save();
 
     return user;
   }
 
-  deleteUserById(id: string) {
+  async deleteUserById(id: string) {
     this.logger.debug(`delete user ${id}`);
 
-    this.db.delete(`${Database.DATABASE_PATH_SEPARATOR}${id}`);
-    this.db.save();
+    await this.db.delete(`${Database.DATABASE_PATH_SEPARATOR}${id}`);
+    await this.db.save();
   }
 }

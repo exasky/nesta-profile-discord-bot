@@ -1,7 +1,7 @@
 import {
   CommandInteraction,
   CommandInteractionOption,
-  MessageEmbed,
+  EmbedBuilder,
 } from 'discord.js';
 import { Logger } from '../../log';
 import { Database } from '../../database/database';
@@ -14,7 +14,7 @@ export enum SHOW_SUB_COMMAND_OPTIONS {
 
 const logger = Logger.for('SHOW PROFILE');
 
-export function showUserProfile(
+export async function showUserProfile(
   interaction: CommandInteraction,
   options?: CommandInteractionOption<any>[]
 ) {
@@ -36,7 +36,7 @@ export function showUserProfile(
     )}`
   );
 
-  const user = Database.intance.getUserById(mentionnedUser.id);
+  const user = await Database.intance.getUserById(mentionnedUser.id);
 
   if (!user) {
     interaction.reply('Profile not found !');
@@ -45,9 +45,9 @@ export function showUserProfile(
 
   const userAvatar = mentionnedUser.avatarURL({});
 
-  const messageEmbed = new MessageEmbed()
+  const messageEmbed = new EmbedBuilder()
     .setColor('#0099ff')
-    .setTitle(`${user.name} profile`);
+    .setTitle(`${user.name ? user.name : mentionnedUser.username} profile`);
 
   if (userAvatar) {
     messageEmbed.setThumbnail(userAvatar);
@@ -68,7 +68,9 @@ export function showUserProfile(
     buildDescription += `\n:speech_left: **Description :** ${user.description}\n`;
   }
 
-  messageEmbed.setDescription(buildDescription);
+  if (buildDescription) {
+    messageEmbed.setDescription(buildDescription);
+  }
 
   messageEmbed.setTimestamp().setFooter({
     text: 'Provided by Exasky',

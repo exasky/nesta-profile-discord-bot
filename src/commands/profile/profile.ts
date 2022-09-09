@@ -14,10 +14,10 @@ export async function processProfileCommand(interaction: CommandInteraction) {
       await processSetProfile(interaction, interactionSubcommands[0].options);
       break;
     case SHOW_COMMAND_NAME:
-      showUserProfile(interaction, interactionSubcommands[0].options);
+      await showUserProfile(interaction, interactionSubcommands[0].options);
       break;
     case DELETE_COMMAND_NAME:
-      deleteUserProfile(interaction);
+      await deleteUserProfile(interaction);
       break;
   }
 }
